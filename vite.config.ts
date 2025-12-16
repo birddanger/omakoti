@@ -7,6 +7,9 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
   },
+  preview: {
+    allowedHosts: ['omakoti.onrender.com'],
+  },
   plugins: [react()],
   resolve: {
     alias: {
