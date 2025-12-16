@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/auth.js';
 import propertyRoutes from './routes/properties.js';
 import logRoutes from './routes/logs.js';
@@ -8,6 +9,22 @@ import taskRoutes from './routes/tasks.js';
 import documentRoutes from './routes/documents.js';
 
 dotenv.config();
+
+const prisma = new PrismaClient({
+  errorFormat: 'pretty',
+});
+
+// Initialize database connection
+async function initializeDatabase() {
+  try {
+    console.log('Testing database connection...');
+    await prisma.$queryRaw`SELECT 1`;
+    console.log('Database connection successful');
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    throw error;
+  }
+}
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
@@ -59,12 +76,21 @@ app.get('/health', (req, res) => {
 });
 
 // Start server
-try {
-  console.log('Starting server...');
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-} catch (err: any) {
-  console.error('Error starting server:', err?.message || err);
-  process.exit(1);
+async function start() {
+  try {
+    console.log('Starting server...');
+    
+    // Initialize database before starting server
+    await initializeDatabase();
+    
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err: any) {
+    console.error('Failed to start server:', err?.message || err);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
 }
+
+start();
