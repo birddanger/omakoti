@@ -7,14 +7,13 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "moduleResolution": "node",
-    "types": ["node", "express"]
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
