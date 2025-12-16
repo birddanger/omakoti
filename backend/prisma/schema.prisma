@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String     @id @default(cuid())
+  name  String
+  email String     @unique
+  password String  // Will be hashed
+  properties Property[]
+  maintenanceLogs MaintenanceLog[]
+  plannedTasks PlannedTask[]
+  documents AppDocument[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id    String     @id @default(cuid())
+  userId String
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name String
+  address String
+  type String  // PropertyType enum value
+  yearBuilt Int
+  area Float
+  heatingType String  // HeatingType enum value
+  floors Int
+  purchaseDate String
+  description String?
+  
+  maintenanceLogs MaintenanceLog[]
+  plannedTasks PlannedTask[]
+  documents AppDocument[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+}
+
+model MaintenanceLog {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title String
+  date String
+  cost Float
+  provider String
+  category String  // Plumbing, Electrical, HVAC, Roofing, Landscaping, General, Appliance
+  notes String
+  
+  documents AppDocument[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([userId])
+}
+
+model PlannedTask {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title String
+  dueDate String
+  priority String  // High, Medium, Low
+  estimatedCost String
+  status String  // pending, completed
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([userId])
+}
+
+model AppDocument {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  logId String?
+  log MaintenanceLog? @relation(fields: [logId], references: [id], onDelete: SetNull)
+  
+  name String
+  type String  // MIME type
+  data String  // Base64 encoded
+  date String
+  size Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([userId])
+  @@index([logId])
+}
