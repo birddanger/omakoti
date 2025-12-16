@@ -2,19 +2,26 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Property, MaintenanceLog, MaintenancePrediction } from "../types";
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-// Initialize the client. We assume API_KEY is available.
-const ai = new GoogleGenAI({ apiKey: apiKey });
+
+// Lazy initialize the client to avoid errors at startup if API key is missing
+let ai: GoogleGenAI | null = null;
+
+const getClient = () => {
+  if (!apiKey) {
+    throw new Error("Gemini API Key is not configured. Please set VITE_GEMINI_API_KEY.");
+  }
+  if (!ai) {
+    ai = new GoogleGenAI({ apiKey: apiKey });
+  }
+  return ai;
+};
 
 export const generateMaintenancePlan = async (
   property: Property,
   logs: MaintenanceLog[],
   language: 'en' | 'fi' = 'en'
 ): Promise<MaintenancePrediction[]> => {
-  if (!apiKey) {
-    console.error("API Key is missing");
-    throw new Error("API Key is missing");
-  }
-
+  const client = getClient();
   const modelId = "gemini-2.5-flash"; // Good for reasoning and structured JSON
   
   // Filter logs for this property to give context
@@ -45,7 +52,7 @@ export const generateMaintenancePlan = async (
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await client.models.generateContent({
       model: modelId,
       contents: prompt,
       config: {
