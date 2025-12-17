@@ -10,15 +10,22 @@ export interface AuthRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.warn('⚠️  WARNING: JWT_SECRET environment variable is not set. Using default value.');
+  console.warn('This should only be used for development. For production, set JWT_SECRET in environment variables.');
+}
+
+const SECRET = JWT_SECRET || 'dev-secret-key-change-in-production';
 
 export const generateToken = (userId: string): string => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ userId }, SECRET, { expiresIn: '7d' });
 };
 
 export const verifyToken = (token: string): any => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, SECRET);
   } catch (error) {
     return null;
   }
@@ -39,5 +46,6 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   }
 
   req.userId = decoded.userId;
+  req.user = { id: decoded.userId, email: '', name: '' };
   next();
 };
