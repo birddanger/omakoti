@@ -69,6 +69,17 @@ export interface AppDocument {
   size: number;
 }
 
+export interface Appliance {
+  id: string;
+  propertyId: string;
+  type: string; // e.g., "Ventilation Unit", "Heat Exchanger", "Water Heater", etc.
+  modelNumber?: string;
+  yearInstalled: number;
+  monthInstalled: number;
+  manualId?: string; // Document ID for manual/receipt
+  dateAdded: string;
+}
+
 export interface MaintenancePrediction {
   task: string;
   reason: string;
@@ -82,4 +93,5 @@ export interface AppState {
   logs: MaintenanceLog[];
   documents: AppDocument[];
   plannedTasks: PlannedTask[];
+  appliances: Appliance[];
 }

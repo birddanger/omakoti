@@ -41,6 +41,7 @@ model Property {
   maintenanceLogs MaintenanceLog[]
   plannedTasks PlannedTask[]
   documents AppDocument[]
+  appliances Appliance[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -101,6 +102,8 @@ model AppDocument {
   logId String?
   log MaintenanceLog? @relation(fields: [logId], references: [id], onDelete: SetNull)
   
+  appliances Appliance[]
+  
   name String
   type String  // MIME type
   data String  // Base64 encoded
@@ -113,4 +116,22 @@ model AppDocument {
   @@index([propertyId])
   @@index([userId])
   @@index([logId])
+}
+model Appliance {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  type String  // Ventilation Unit, Heat Exchanger, Water Heater, etc.
+  modelNumber String?
+  yearInstalled Int
+  monthInstalled Int
+  manualId String?
+  manual AppDocument? @relation(fields: [manualId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([manualId])
 }

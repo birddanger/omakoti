@@ -4,6 +4,7 @@ import { Property, MaintenanceLog, MaintenancePrediction, AppDocument, PlannedTa
 import { generateMaintenancePlan } from '../services/geminiService';
 import { ArrowLeft, Sparkles, Calendar, Plus, PenTool, AlertTriangle, Paperclip, X, Image as ImageIcon, FileText, Loader2, Pencil, Ruler, Flame, Layers, CheckSquare, Trash2, ListChecks } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import AppliancesList from './AppliancesList';
 
 interface PropertyDetailsProps {
   properties: Property[];
@@ -439,6 +440,9 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Appliances Section */}
+      {id && <AppliancesList propertyId={id} />}
 
       {/* Maintenance History Section - BOTTOM */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
