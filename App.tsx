@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import PropertyDetails from './components/PropertyDetails';
 import PropertyCard from './components/PropertyCard';
 import FilesView from './components/FilesView';
+import LandingPage from './components/LandingPage';
 import { LoginPage, RegisterPage } from './components/Auth';
 import { Property, MaintenanceLog, PropertyType, User, AppDocument, HeatingType, PlannedTask } from './types';
 import { Plus, Search, Loader2, Download, AlertCircle } from 'lucide-react';
@@ -426,11 +427,15 @@ const MainApp: React.FC = () => {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={
+          user ? <Navigate to="/dashboard" replace /> : <LandingPage />
+        } />
         <Route path="/login" element={
-          user ? <Navigate to="/" replace /> : <LoginPage onLogin={setUser} />
+          user ? <Navigate to="/dashboard" replace /> : <LoginPage onLogin={setUser} />
         } />
         <Route path="/register" element={
-          user ? <Navigate to="/" replace /> : <RegisterPage onLogin={setUser} />
+          user ? <Navigate to="/dashboard" replace /> : <RegisterPage onLogin={setUser} />
         } />
         
         {/* Protected Routes Wrapper */}
@@ -462,7 +467,7 @@ const MainApp: React.FC = () => {
               )}
 
               <Routes>
-                <Route path="/" element={<Dashboard properties={properties} logs={logs} plannedTasks={plannedTasks} />} />
+                <Route path="/dashboard" element={<Dashboard properties={properties} logs={logs} plannedTasks={plannedTasks} />} />
                 <Route path="/properties" element={<PropertiesList />} />
                 <Route path="/properties/:id" element={
                   <PropertyDetails 
@@ -480,11 +485,11 @@ const MainApp: React.FC = () => {
                 } />
                 <Route path="/logs" element={<LogsList />} />
                 <Route path="/files" element={<FilesView documents={documents} properties={properties} logs={logs} />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Routes>
             </Layout>
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/" replace />
           )
         } />
       </Routes>
