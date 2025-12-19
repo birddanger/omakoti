@@ -42,6 +42,7 @@ model Property {
   plannedTasks PlannedTask[]
   documents AppDocument[]
   appliances Appliance[]
+  seasonalChecklists SeasonalChecklist[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,6 +118,7 @@ model AppDocument {
   @@index([userId])
   @@index([logId])
 }
+
 model Appliance {
   id    String     @id @default(cuid())
   propertyId String
@@ -134,4 +136,19 @@ model Appliance {
   
   @@index([propertyId])
   @@index([manualId])
+}
+
+model SeasonalChecklist {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  season String  // Spring, Summer, Fall, Winter
+  items String  // JSON array of checklist items
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@unique([propertyId, season])
 }

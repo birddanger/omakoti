@@ -8,6 +8,7 @@ import logRoutes from './routes/logs.js';
 import taskRoutes from './routes/tasks.js';
 import documentRoutes from './routes/documents.js';
 import applianceRoutes from './routes/appliances.js';
+import checklistRoutes from './routes/checklists.js';
 
 dotenv.config();
 
@@ -68,6 +69,8 @@ try {
   console.log('Documents routes loaded');
   app.use('/api/appliances', applianceRoutes);
   console.log('Appliances routes loaded');
+  app.use('/api/checklists', checklistRoutes);
+  console.log('Checklists routes loaded');
 } catch (err: any) {
   console.error('Error loading routes:', err?.message || err);
   process.exit(1);

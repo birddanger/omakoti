@@ -5,6 +5,7 @@ import { generateMaintenancePlan } from '../services/geminiService';
 import { ArrowLeft, Sparkles, Calendar, Plus, PenTool, AlertTriangle, Paperclip, X, Image as ImageIcon, FileText, Loader2, Pencil, Ruler, Flame, Layers, CheckSquare, Trash2, ListChecks } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import AppliancesList from './AppliancesList';
+import SeasonalChecklists from './SeasonalChecklists';
 
 interface PropertyDetailsProps {
   properties: Property[];
@@ -443,6 +444,9 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
 
       {/* Appliances Section */}
       {id && <AppliancesList propertyId={id} />}
+
+      {/* Seasonal Checklists Section */}
+      {id && <SeasonalChecklists propertyId={id} />}
 
       {/* Maintenance History Section - BOTTOM */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

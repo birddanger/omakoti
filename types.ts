@@ -69,6 +69,22 @@ export interface AppDocument {
   size: number;
 }
 
+export interface ChecklistItem {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate?: string;
+}
+
+export interface SeasonalChecklist {
+  id: string;
+  propertyId: string;
+  season: 'Spring' | 'Summer' | 'Fall' | 'Winter';
+  items: ChecklistItem[];
+  completionPercentage?: number;
+  lastUpdated: string;
+}
+
 export interface Appliance {
   id: string;
   propertyId: string;
