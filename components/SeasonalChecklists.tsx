@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Circle, Plus, Trash2, Loader, AlertCircle } from 'lucide-react';
-import { SeasonalChecklist, ChecklistItem } from '../types';
+import { CheckCircle2, Circle, Plus, Trash2, Loader, AlertCircle, ArrowRight } from 'lucide-react';
+import { SeasonalChecklist, ChecklistItem, PlannedTask } from '../types';
 import { checklistsService } from '../services/checklistsService';
 
 interface SeasonalChecklistsProps {
   propertyId: string;
+  onAddPlannedTask?: (task: Omit<PlannedTask, 'id'>) => Promise<void>;
 }
 
-export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ propertyId }) => {
+export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ propertyId, onAddPlannedTask }) => {
   const [checklists, setChecklists] = useState<SeasonalChecklist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'Spring' | 'Summer' | 'Fall' | 'Winter'>('Spring');
   const [newItemTitle, setNewItemTitle] = useState('');
   const [initialized, setInitialized] = useState(false);
+  const [addingToPlanned, setAddingToPlanned] = useState<string | null>(null);
 
   useEffect(() => {
     loadChecklists();
@@ -110,6 +112,70 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
     } catch (err) {
       console.error('Error deleting item:', err);
       setError('Failed to delete item');
+    }
+  };
+
+  const getSeasonDueDate = (season: string): string => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    let targetDate: Date;
+
+    switch (season) {
+      case 'Spring':
+        // Set to March 1st of current or next year
+        targetDate = new Date(currentYear, 2, 1); // March 1st
+        if (targetDate < today) {
+          targetDate = new Date(currentYear + 1, 2, 1);
+        }
+        break;
+      case 'Summer':
+        // Set to June 1st
+        targetDate = new Date(currentYear, 5, 1); // June 1st
+        if (targetDate < today) {
+          targetDate = new Date(currentYear + 1, 5, 1);
+        }
+        break;
+      case 'Fall':
+        // Set to September 1st
+        targetDate = new Date(currentYear, 8, 1); // September 1st
+        if (targetDate < today) {
+          targetDate = new Date(currentYear + 1, 8, 1);
+        }
+        break;
+      case 'Winter':
+        // Set to December 1st
+        targetDate = new Date(currentYear, 11, 1); // December 1st
+        if (targetDate < today) {
+          targetDate = new Date(currentYear + 1, 11, 1);
+        }
+        break;
+      default:
+        targetDate = today;
+    }
+
+    return targetDate.toISOString().split('T')[0];
+  };
+
+  const addTaskToPlanned = async (item: ChecklistItem) => {
+    if (!onAddPlannedTask || !activeChecklist) return;
+
+    setAddingToPlanned(item.id);
+    try {
+      const plannedTask: Omit<PlannedTask, 'id'> = {
+        propertyId,
+        title: item.title,
+        dueDate: getSeasonDueDate(activeChecklist.season),
+        priority: 'Medium',
+        estimatedCost: '',
+        status: 'pending'
+      };
+      await onAddPlannedTask(plannedTask);
+      setError(null);
+    } catch (err) {
+      console.error('Error adding to planned tasks:', err);
+      setError('Failed to add task to planned list');
+    } finally {
+      setAddingToPlanned(null);
     }
   };
 
@@ -215,12 +281,28 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
                 >
                   {item.title}
                 </span>
-                <button
-                  onClick={() => deleteItem(item.id)}
-                  className="flex-shrink-0 p-1 text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex-shrink-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                  {onAddPlannedTask && (
+                    <button
+                      onClick={() => addTaskToPlanned(item)}
+                      disabled={addingToPlanned === item.id}
+                      className="p-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded disabled:opacity-50"
+                      title="Add to planned tasks"
+                    >
+                      {addingToPlanned === item.id ? (
+                        <Loader className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <ArrowRight className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => deleteItem(item.id)}
+                    className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             ))
           ) : (

@@ -446,7 +446,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       {id && <AppliancesList propertyId={id} />}
 
       {/* Seasonal Checklists Section */}
-      {id && <SeasonalChecklists propertyId={id} />}
+      {id && <SeasonalChecklists propertyId={id} onAddPlannedTask={onAddPlannedTask} />}
 
       {/* Maintenance History Section - BOTTOM */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
