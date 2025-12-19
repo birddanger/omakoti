@@ -61,6 +61,7 @@ const translations: Record<string, Record<Language, string>> = {
   'plan.current_tasks': { en: 'Planned Tasks', fi: 'Suunnitellut tehtävät' },
   'plan.add_custom': { en: 'Add Custom Task', fi: 'Lisää oma tehtävä' },
   'plan.no_tasks': { en: 'No tasks planned yet.', fi: 'Ei suunniteltuja tehtäviä.' },
+  'plan.of': { en: 'of', fi: 'kpl' },
   'plan.ai.title': { en: 'Predictive Maintenance Suggestions', fi: 'Ennakoivat huoltoehdotukset' },
   'plan.ai.desc': { en: 'Let AI analyze your property details and history to suggest upcoming essential maintenance tasks.', fi: 'Anna tekoälyn analysoida kiinteistösi tiedot ja historia ehdottaakseen tulevia huoltotoimenpiteitä.' },
   'plan.ai.generate': { en: 'Generate Suggestions', fi: 'Luo ehdotukset' },
@@ -146,6 +147,60 @@ const translations: Record<string, Record<Language, string>> = {
   'Landscaping': { en: 'Landscaping', fi: 'Piha' },
   'General': { en: 'General', fi: 'Yleinen' },
   'Appliance': { en: 'Appliance', fi: 'Kodinkoneet' },
+
+  // Appliances
+  'appliances.title': { en: 'Home Appliances', fi: 'Kodinkoneet' },
+  'appliances.add': { en: 'Add Appliance', fi: 'Lisää koneisto' },
+  'appliances.type': { en: 'Type', fi: 'Tyyppi' },
+  'appliances.model': { en: 'Model Number', fi: 'Mallinumero' },
+  'appliances.year': { en: 'Year Installed', fi: 'Asennusvuosi' },
+  'appliances.month': { en: 'Month', fi: 'Kuukausi' },
+  'appliances.no_appliances': { en: 'No appliances registered yet.', fi: 'Ei rekisteröityjä koneistoja.' },
+  'appliances.form_title': { en: 'Add New Appliance', fi: 'Lisää uusi koneisto' },
+  'appliances.delete_confirm': { en: 'Delete this appliance?', fi: 'Poista tämä koneisto?' },
+
+  // Seasonal Checklists
+  'checklist.title': { en: 'Seasonal Maintenance Checklists', fi: 'Kausittaiset huoltolistat' },
+  'checklist.subtitle': { en: 'Get started with seasonal maintenance checklists to keep your property in great condition throughout the year.', fi: 'Aloita kausittaisilla huoltolistoilla pitääksesi kiinteistösi hyvässä kunnossa ympäri vuoden.' },
+  'checklist.initialize': { en: 'Initialize Checklists', fi: 'Alusta listat' },
+  'checklist.progress': { en: 'Progress', fi: 'Edistyminen' },
+  'checklist.completed': { en: 'completed', fi: 'valmis' },
+  'checklist.add_task': { en: 'Add a new maintenance task...', fi: 'Lisää uusi huoltotehtävä...' },
+  'checklist.add_button': { en: 'Add', fi: 'Lisää' },
+  'checklist.add_to_planned': { en: 'Add to planned tasks', fi: 'Lisää suunniteltuihin tehtäviin' },
+  'checklist.tip': { en: 'Tip: Complete these tasks during', fi: 'Vihje: Suorita nämä tehtävät' },
+  'checklist.tip_to': { en: 'to keep your property well-maintained throughout the year.', fi: 'pitääksesi kiinteistösi hyvin ylläpidettynä ympäri vuoden.' },
+  'checklist.spring': { en: 'spring', fi: 'keväällä' },
+  'checklist.summer': { en: 'summer', fi: 'kesällä' },
+  'checklist.fall': { en: 'fall', fi: 'syksyllä' },
+  'checklist.winter': { en: 'winter', fi: 'talvella' },
+  'checklist.Spring': { en: 'Spring', fi: 'Kevät' },
+  'checklist.Summer': { en: 'Summer', fi: 'Kesä' },
+  'checklist.Fall': { en: 'Fall', fi: 'Syksy' },
+  'checklist.Winter': { en: 'Winter', fi: 'Talvi' },
+
+  // Months
+  'month.January': { en: 'January', fi: 'Tammikuu' },
+  'month.February': { en: 'February', fi: 'Helmikuu' },
+  'month.March': { en: 'March', fi: 'Maaliskuu' },
+  'month.April': { en: 'April', fi: 'Huhtikuu' },
+  'month.May': { en: 'May', fi: 'Toukokuu' },
+  'month.June': { en: 'June', fi: 'Kesäkuu' },
+  'month.July': { en: 'July', fi: 'Heinäkuu' },
+  'month.August': { en: 'August', fi: 'Elokuu' },
+  'month.September': { en: 'September', fi: 'Syyskuu' },
+  'month.October': { en: 'October', fi: 'Lokakuu' },
+  'month.November': { en: 'November', fi: 'Marraskuu' },
+  'month.December': { en: 'December', fi: 'Joulukuu' },
+
+  // Priority
+  'priority.High': { en: 'High', fi: 'Korkea' },
+  'priority.Medium': { en: 'Medium', fi: 'Keskitaso' },
+  'priority.Low': { en: 'Low', fi: 'Matala' },
+
+  // Task Status
+  'status.pending': { en: 'Pending', fi: 'Odottava' },
+  'status.completed': { en: 'Completed', fi: 'Valmis' },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);

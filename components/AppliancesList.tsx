@@ -42,7 +42,7 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
   const handleAddAppliance = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.type.trim()) {
-      setError('Please enter appliance type');
+      setError(t('appliances.add'));
       return;
     }
 
@@ -69,7 +69,7 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
   };
 
   const handleDeleteAppliance = async (applianceId: string) => {
-    if (!confirm('Are you sure you want to delete this appliance?')) {
+    if (!confirm(t('checklist.delete_confirm'))) {
       return;
     }
 
@@ -83,15 +83,16 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
   };
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    t('month.January'), t('month.February'), t('month.March'), t('month.April'), 
+    t('month.May'), t('month.June'), t('month.July'), t('month.August'), 
+    t('month.September'), t('month.October'), t('month.November'), t('month.December')
   ];
 
   return (
     <div className="mt-8 p-6 bg-white rounded-lg shadow">
       <h3 className="text-xl font-semibold mb-4 flex items-center">
         <span className="mr-2">⚙️</span>
-        Home Appliances & Machines
+        {t('appliances.title')}
       </h3>
 
       {error && (
@@ -102,7 +103,7 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
       )}
 
       {loading ? (
-        <p className="text-gray-500">Loading appliances...</p>
+        <p className="text-gray-500">{t('plan.ai.analyzing')}</p>
       ) : (
         <>
           {appliances.length > 0 && (
@@ -114,17 +115,17 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
                       <h4 className="font-semibold text-gray-800">{appliance.type}</h4>
                       {appliance.modelNumber && (
                         <p className="text-sm text-gray-600">
-                          <span className="font-medium">Model:</span> {appliance.modelNumber}
+                          <span className="font-medium">{t('appliances.model')}:</span> {appliance.modelNumber}
                         </p>
                       )}
                       <p className="text-sm text-gray-600">
-                        <span className="font-medium">Installed:</span> {monthNames[appliance.monthInstalled - 1]} {appliance.yearInstalled}
+                        <span className="font-medium">{t('detail.recorded_maint')}:</span> {monthNames[appliance.monthInstalled - 1]} {appliance.yearInstalled}
                       </p>
                     </div>
                     <button
                       onClick={() => handleDeleteAppliance(appliance.id)}
                       className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                      title="Delete appliance"
+                      title={t('appliances.delete_confirm')}
                     >
                       <Trash2 size={20} />
                     </button>
@@ -140,21 +141,21 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
               className="mb-4 flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
             >
               <Plus size={20} className="mr-2" />
-              Add Appliance
+              {t('appliances.add')}
             </button>
           )}
 
           {showForm && (
             <form onSubmit={handleAddAppliance} className="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4">
-              <h4 className="font-semibold mb-4">Register New Appliance</h4>
+              <h4 className="font-semibold mb-4">{t('appliances.form_title')}</h4>
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Type / Name <span className="text-red-500">*</span>
+                  {t('appliances.type')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g., Ventilation Unit, Heat Exchanger, Water Heater"
+                  placeholder={t('appliances.type')}
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -163,11 +164,11 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Model Number <span className="text-gray-500">(Optional)</span>
+                  {t('appliances.model')} <span className="text-gray-500">(Optional)</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g., Model XYZ-123"
+                  placeholder={t('appliances.model')}
                   value={formData.modelNumber}
                   onChange={(e) => setFormData({ ...formData, modelNumber: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -177,7 +178,7 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Year Installed <span className="text-red-500">*</span>
+                    {t('appliances.year')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
@@ -190,7 +191,7 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Month <span className="text-red-500">*</span>
+                    {t('appliances.month')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.monthInstalled}
@@ -211,14 +212,14 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
                   type="submit"
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                 >
-                  Add Appliance
+                  {t('appliances.add')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
                   className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
                 >
-                  Cancel
+                  {t('form.cancel')}
                 </button>
               </div>
             </form>
@@ -226,7 +227,7 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
 
           {appliances.length === 0 && !showForm && (
             <p className="text-gray-500 text-center py-4">
-              No appliances registered yet. Click "Add Appliance" to get started.
+              {t('appliances.no_appliances')}
             </p>
           )}
         </>

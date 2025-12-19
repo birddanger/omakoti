@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Circle, Plus, Trash2, Loader, AlertCircle, ArrowRight } from 'lucide-react';
 import { SeasonalChecklist, ChecklistItem, PlannedTask } from '../types';
 import { checklistsService } from '../services/checklistsService';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface SeasonalChecklistsProps {
   propertyId: string;
@@ -9,6 +10,7 @@ interface SeasonalChecklistsProps {
 }
 
 export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ propertyId, onAddPlannedTask }) => {
+  const { t } = useLanguage();
   const [checklists, setChecklists] = useState<SeasonalChecklist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -194,15 +196,15 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
   if (!initialized) {
     return (
       <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Seasonal Maintenance Checklists</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('checklist.title')}</h3>
         <p className="text-gray-600 mb-4">
-          Get started with seasonal maintenance checklists to keep your property in great condition throughout the year.
+          {t('checklist.subtitle')}
         </p>
         <button
           onClick={initializeChecklists}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
-          Initialize Checklists
+          {t('checklist.initialize')}
         </button>
       </div>
     );
@@ -210,7 +212,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
 
   return (
     <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Seasonal Maintenance Checklists</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('checklist.title')}</h3>
 
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
@@ -231,7 +233,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             }`}
           >
-            {season}
+            {t(`checklist.${season}`)}
           </button>
         ))}
       </div>
@@ -240,9 +242,9 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
       {activeChecklist && (
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">Progress</span>
+            <span className="text-sm font-medium text-gray-700">{t('checklist.progress')}</span>
             <span className="text-sm text-gray-600">
-              {completedCount} of {totalCount} completed
+              {completedCount} {t('plan.of')} {totalCount} {t('checklist.completed')}
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -287,7 +289,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
                       onClick={() => addTaskToPlanned(item)}
                       disabled={addingToPlanned === item.id}
                       className="p-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded disabled:opacity-50"
-                      title="Add to planned tasks"
+                      title={t('checklist.add_to_planned')}
                     >
                       {addingToPlanned === item.id ? (
                         <Loader className="w-4 h-4 animate-spin" />
@@ -306,7 +308,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
               </div>
             ))
           ) : (
-            <p className="text-gray-500 text-sm">No items in this checklist</p>
+            <p className="text-gray-500 text-sm">{t('plan.no_tasks')}</p>
           )}
         </div>
       )}
@@ -318,7 +320,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
             type="text"
             value={newItemTitle}
             onChange={(e) => setNewItemTitle(e.target.value)}
-            placeholder="Add a new maintenance task..."
+            placeholder={t('checklist.add_task')}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
           <button
@@ -326,7 +328,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Add</span>
+            <span className="hidden sm:inline">{t('checklist.add_button')}</span>
           </button>
         </form>
       )}
@@ -334,8 +336,7 @@ export const SeasonalChecklists: React.FC<SeasonalChecklistsProps> = ({ property
       {/* Season Info */}
       <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
         <p className="text-sm text-blue-900">
-          <span className="font-semibold">Tip:</span> Complete these tasks during {activeTab.toLowerCase()} to keep your property
-          well-maintained throughout the year.
+          <span className="font-semibold">{t('plan.ai.desc').split(' ')[0]}:</span> {t('checklist.tip')} {t(`checklist.${activeTab.toLowerCase()}`)} {t('checklist.tip_to')}
         </p>
       </div>
     </div>
