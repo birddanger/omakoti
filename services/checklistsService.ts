@@ -1,11 +1,15 @@
 import { SeasonalChecklist, ChecklistItem } from '../types';
+import { authService } from './authService';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const checklistsService = {
   // Get all checklists for a property
   async getChecklists(propertyId: string): Promise<SeasonalChecklist[]> {
-    const token = localStorage.getItem('token');
+    const token = authService.getToken();
+    if (!token) {
+      throw new Error('No authentication token found. Please log in again.');
+    }
     const response = await fetch(`${API_URL}/checklists/${propertyId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -21,7 +25,7 @@ export const checklistsService = {
 
   // Initialize seasonal checklists with templates
   async initializeChecklists(propertyId: string): Promise<SeasonalChecklist[]> {
-    const token = localStorage.getItem('token');
+    const token = authService.getToken();
     if (!token) {
       throw new Error('No authentication token found. Please log in again.');
     }
@@ -44,7 +48,10 @@ export const checklistsService = {
 
   // Update checklist items
   async updateChecklist(checklistId: string, items: ChecklistItem[]): Promise<SeasonalChecklist> {
-    const token = localStorage.getItem('token');
+    const token = authService.getToken();
+    if (!token) {
+      throw new Error('No authentication token found. Please log in again.');
+    }
     const response = await fetch(`${API_URL}/checklists/${checklistId}`, {
       method: 'PUT',
       headers: {
@@ -63,7 +70,10 @@ export const checklistsService = {
 
   // Delete a checklist
   async deleteChecklist(checklistId: string): Promise<void> {
-    const token = localStorage.getItem('token');
+    const token = authService.getToken();
+    if (!token) {
+      throw new Error('No authentication token found. Please log in again.');
+    }
     const response = await fetch(`${API_URL}/checklists/${checklistId}`, {
       method: 'DELETE',
       headers: {
