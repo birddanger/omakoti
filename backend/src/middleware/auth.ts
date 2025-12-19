@@ -35,6 +35,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const authHeader = req.headers.authorization;
   
   if (!authHeader) {
+    console.warn('Authentication failed: No authorization header present');
     return res.status(401).json({ error: 'No authorization header' });
   }
 
@@ -42,6 +43,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const decoded = verifyToken(token);
 
   if (!decoded) {
+    console.warn('Authentication failed: Invalid or expired token');
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 

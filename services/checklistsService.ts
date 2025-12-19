@@ -22,6 +22,9 @@ export const checklistsService = {
   // Initialize seasonal checklists with templates
   async initializeChecklists(propertyId: string): Promise<SeasonalChecklist[]> {
     const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token found. Please log in again.');
+    }
     const response = await fetch(`${API_URL}/checklists/initialize/${propertyId}`, {
       method: 'POST',
       headers: {
@@ -31,7 +34,9 @@ export const checklistsService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to initialize checklists');
+      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('Initialize checklists error:', response.status, error);
+      throw new Error(`Failed to initialize checklists: ${error.error || response.statusText}`);
     }
 
     return response.json();
