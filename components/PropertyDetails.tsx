@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Property, MaintenanceLog, MaintenancePrediction, AppDocument, PlannedTask } from '../types';
 import { generateMaintenancePlan } from '../services/geminiService';
-import { ArrowLeft, Sparkles, Calendar, Plus, PenTool, AlertTriangle, Paperclip, X, Image as ImageIcon, FileText, Loader2, Pencil, Ruler, Flame, Layers, CheckSquare, Trash2, ListChecks } from 'lucide-react';
+import { ArrowLeft, Sparkles, Calendar, Plus, PenTool, AlertTriangle, Paperclip, X, Image as ImageIcon, FileText, Loader2, Pencil, Ruler, Flame, Layers, CheckSquare, Trash2, ListChecks, Users } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import AppliancesList from './AppliancesList';
 import SeasonalChecklists from './SeasonalChecklists';
+import FamilyAccess from './FamilyAccess';
 
 interface PropertyDetailsProps {
   properties: Property[];
@@ -37,6 +38,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   const [predictions, setPredictions] = useState<MaintenancePrediction[]>([]);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [showFamilyAccess, setShowFamilyAccess] = useState(false);
   const { t, language } = useLanguage();
 
   const property = properties.find(p => p.id === id);
@@ -281,28 +283,37 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <Link to="/properties" className="p-2 hover:bg-slate-100 rounded-full text-slate-500">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900">{property.name}</h2>
-          <p className="text-slate-500 text-sm">{property.address}</p>
-          <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-slate-600">
-             <span className="flex items-center bg-slate-100 px-2 py-1 rounded">
-               <Ruler className="w-4 h-4 mr-2 text-slate-400" /> 
-               {property.area} m²
-             </span>
-             <span className="flex items-center bg-slate-100 px-2 py-1 rounded">
-               <Flame className="w-4 h-4 mr-2 text-slate-400" /> 
-               {t(property.heatingType)}
-             </span>
-             <span className="flex items-center bg-slate-100 px-2 py-1 rounded">
-               <Layers className="w-4 h-4 mr-2 text-slate-400" /> 
-               {property.floors} {t('form.floors')}
-             </span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Link to="/properties" className="p-2 hover:bg-slate-100 rounded-full text-slate-500">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">{property.name}</h2>
+            <p className="text-slate-500 text-sm">{property.address}</p>
+            <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-slate-600">
+               <span className="flex items-center bg-slate-100 px-2 py-1 rounded">
+                 <Ruler className="w-4 h-4 mr-2 text-slate-400" /> 
+                 {property.area} m²
+               </span>
+               <span className="flex items-center bg-slate-100 px-2 py-1 rounded">
+                 <Flame className="w-4 h-4 mr-2 text-slate-400" /> 
+                 {t(property.heatingType)}
+               </span>
+               <span className="flex items-center bg-slate-100 px-2 py-1 rounded">
+                 <Layers className="w-4 h-4 mr-2 text-slate-400" /> 
+                 {property.floors} {t('form.floors')}
+               </span>
+            </div>
           </div>
         </div>
+        <button
+          onClick={() => setShowFamilyAccess(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 rounded-lg transition-colors font-medium"
+        >
+          <Users className="w-4 h-4" />
+          {t('access.title')}
+        </button>
       </div>
 
       {/* Appliances Section */}
@@ -870,6 +881,14 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
             </form>
           </div>
         </div>
+      )}
+
+      {/* Family Access Modal */}
+      {showFamilyAccess && (
+        <FamilyAccess 
+          propertyId={id!} 
+          onClose={() => setShowFamilyAccess(false)}
+        />
       )}
     </div>
   );

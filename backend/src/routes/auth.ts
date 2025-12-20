@@ -30,6 +30,28 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
       }
     });
 
+    // Check for pending invitations and activate them
+    const pendingInvitations = await prisma.propertyAccess.findMany({
+      where: {
+        inviteEmail: email,
+        inviteAccepted: false
+      }
+    });
+
+    if (pendingInvitations.length > 0) {
+      await prisma.propertyAccess.updateMany({
+        where: {
+          inviteEmail: email,
+          inviteAccepted: false
+        },
+        data: {
+          userId: user.id,
+          inviteAccepted: true,
+          acceptedAt: new Date()
+        }
+      });
+    }
+
     const token = generateToken(user.id);
 
     res.status(201).json({

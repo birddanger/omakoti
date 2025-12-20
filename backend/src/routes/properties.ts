@@ -58,7 +58,18 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
         heatingType,
         floors,
         purchaseDate,
-        description
+        description,
+        propertyAccess: {
+          create: {
+            userId: req.userId!,
+            role: 'owner',
+            inviteAccepted: true,
+            acceptedAt: new Date()
+          }
+        }
+      },
+      include: {
+        propertyAccess: true
       }
     });
 

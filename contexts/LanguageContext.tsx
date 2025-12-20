@@ -216,7 +216,27 @@ const translations: Record<string, Record<Language, string>> = {
   // Task Status
   'status.pending': { en: 'Pending', fi: 'Odottava' },
   'status.completed': { en: 'Completed', fi: 'Valmis' },
-};
+
+  // Family Access
+  'access.title': { en: 'Family Access', fi: 'Perheenjäsenten käyttöoikeus' },
+  'access.invite': { en: 'Invite Family Member', fi: 'Kutsu perheenjäsen' },
+  'access.email': { en: 'Email Address', fi: 'Sähköpostiosoite' },
+  'access.permission': { en: 'Permission Level', fi: 'Oikeuksien taso' },
+  'access.view': { en: 'View Only', fi: 'Vain katselutila' },
+  'access.view_desc': { en: 'Can see property details and history', fi: 'Voi nähdä kiinteistön tiedot ja historian' },
+  'access.edit': { en: 'Can Edit', fi: 'Voi muokata' },
+  'access.edit_desc': { en: 'Can add tasks and logs, but not manage access', fi: 'Voi lisätä tehtäviä ja merkintöjä, mutta ei hallitse oikeuksia' },
+  'access.admin': { en: 'Admin', fi: 'Pääkäyttäjä' },
+  'access.admin_desc': { en: 'Full access including inviting others', fi: 'Täysi oikeus mukaan lukien muiden kutsuminen' },
+  'access.owner': { en: 'Owner', fi: 'Omistaja' },
+  'access.owner_desc': { en: 'Property owner, has all permissions', fi: 'Kiinteistön omistaja, kaikki oikeudet' },
+  'access.current': { en: 'Current Access', fi: 'Nykyiset oikeudet' },
+  'access.no_access': { en: 'No one else has access yet', fi: 'Kukaan muu ei ole vielä saanut oikeuksia' },
+  'access.pending': { en: 'Pending Invite', fi: 'Odottava kutsu' },
+  'access.send': { en: 'Send Invite', fi: 'Lähetä kutsu' },
+  'access.remove': { en: 'Remove Access', fi: 'Poista oikeudet' },
+  'access.sure_remove': { en: 'Are you sure you want to remove this person\'s access?', fi: 'Oletko varma, että haluat poistaa tämän henkilön oikeudet?' },
+}
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 

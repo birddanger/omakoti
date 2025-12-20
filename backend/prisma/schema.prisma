@@ -19,6 +19,7 @@ model User {
   maintenanceLogs MaintenanceLog[]
   plannedTasks PlannedTask[]
   documents AppDocument[]
+  propertyAccess PropertyAccess[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -43,6 +44,7 @@ model Property {
   documents AppDocument[]
   appliances Appliance[]
   seasonalChecklists SeasonalChecklist[]
+  propertyAccess PropertyAccess[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -151,4 +153,25 @@ model SeasonalChecklist {
   
   @@index([propertyId])
   @@unique([propertyId, season])
+}
+
+model PropertyAccess {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  role String  // owner, admin, edit, view
+  inviteEmail String?  // For pending invitations
+  inviteAccepted Boolean @default(false)
+  invitedAt DateTime @default(now())
+  acceptedAt DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([propertyId, userId])
+  @@index([propertyId])
+  @@index([userId])
 }
