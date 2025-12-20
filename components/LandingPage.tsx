@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Hammer, CheckCircle, TrendingDown, FileText, Users } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 const LandingPage: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Navigation */}
@@ -12,13 +15,16 @@ const LandingPage: React.FC = () => {
             <Hammer className="w-8 h-8 text-blue-600" />
             <span className="text-xl font-bold text-slate-900">PropMaint</span>
           </div>
-          <div className="space-x-4">
-            <Link to="/login" className="px-4 py-2 text-slate-700 hover:text-slate-900 font-medium">
-              Sign In
-            </Link>
-            <Link to="/register" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-              Sign Up Free
-            </Link>
+          <div className="flex items-center gap-6">
+            <LanguageSelector />
+            <div className="space-x-4">
+              <Link to="/login" className="px-4 py-2 text-slate-700 hover:text-slate-900 font-medium">
+                {t('auth.signin')}
+              </Link>
+              <Link to="/register" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                {t('auth.register')}
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -27,19 +33,18 @@ const LandingPage: React.FC = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-            Manage Your Properties<br />
-            <span className="text-blue-600">Simple & Efficient</span>
+            {t('landing.title')}<br />
+            <span className="text-blue-600">{t('landing.subtitle')}</span>
           </h1>
           <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-            Track maintenance history, keep expenses organized, and increase your property's value. 
-            All in one place.
+            {t('landing.description')}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link to="/register" className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg shadow-lg">
-              Get Started Free
+              {t('landing.get_started')}
             </Link>
             <Link to="/login" className="px-8 py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold text-lg">
-              Sign In
+              {t('landing.sign_in')}
             </Link>
           </div>
         </div>
@@ -51,42 +56,42 @@ const LandingPage: React.FC = () => {
             <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 text-blue-600 mb-4">
               <Hammer className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Manage Properties</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('landing.feature_track')}</h3>
             <p className="text-slate-600">
-              Keep all your properties organized in one central dashboard. Track details, ownership, and more.
+              {t('landing.feature_track_desc')}
             </p>
           </div>
 
           {/* Feature 2 */}
           <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100 text-green-600 mb-4">
-              <FileText className="w-6 h-6" />
+              <CheckCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Maintenance History</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('landing.feature_plan')}</h3>
             <p className="text-slate-600">
-              Log every maintenance activity with dates, costs, and notes. Build a complete property history.
+              {t('landing.feature_plan_desc')}
             </p>
           </div>
 
           {/* Feature 3 */}
           <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-100 text-purple-600 mb-4">
-              <TrendingDown className="w-6 h-6" />
+              <FileText className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Track Expenses</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('landing.feature_organize')}</h3>
             <p className="text-slate-600">
-              Monitor all maintenance and repair costs. Understand your property investment better.
+              {t('landing.feature_organize_desc')}
             </p>
           </div>
 
           {/* Feature 4 */}
           <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-orange-100 text-orange-600 mb-4">
-              <Users className="w-6 h-6" />
+              <TrendingDown className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Share History</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('landing.feature_insights')}</h3>
             <p className="text-slate-600">
-              Access and present your maintenance records to potential buyers. Demonstrate proper upkeep.
+              {t('landing.feature_insights_desc')}
             </p>
           </div>
         </div>

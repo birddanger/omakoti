@@ -20,6 +20,21 @@ const translations: Record<string, Record<Language, string>> = {
   'app.signin_desc': { en: 'Sign in to manage your properties', fi: 'Kirjaudu hallinnoidaksesi kiinteistöjä' },
   'app.register_desc': { en: 'Start tracking your property maintenance today', fi: 'Aloita kiinteistöhuollon seuranta tänään' },
 
+  // Landing Page
+  'landing.title': { en: 'Manage Your Properties', fi: 'Hallinnoi kiinteistöjäsi' },
+  'landing.subtitle': { en: 'Simple & Efficient', fi: 'Yksinkertaista & tehokasta' },
+  'landing.description': { en: 'Track maintenance history, keep expenses organized, and increase your property\'s value. All in one place.', fi: 'Seuraa huoltohistoriaa, järjestä kulut ja lisää kiinteistösi arvoa. Kaikki yhdessä paikassa.' },
+  'landing.get_started': { en: 'Get Started Free', fi: 'Aloita ilmaiseksi' },
+  'landing.sign_in': { en: 'Sign In', fi: 'Kirjaudu sisään' },
+  'landing.feature_track': { en: 'Track Maintenance', fi: 'Huollon seuranta' },
+  'landing.feature_track_desc': { en: 'Record all maintenance activities, costs, and contractors in one organized place.', fi: 'Kirjaa kaikki huoltotoimenpiteet, kustannukset ja urakoitsijat yhteen paikkaan.' },
+  'landing.feature_plan': { en: 'Smart Planning', fi: 'Älykäs suunnittelu' },
+  'landing.feature_plan_desc': { en: 'AI-powered suggestions help predict maintenance needs based on property history.', fi: 'Tekoäly ehdottaa huoltotarpeet kiinteistöhistorian perusteella.' },
+  'landing.feature_organize': { en: 'Stay Organized', fi: 'Järjestetty arkisto' },
+  'landing.feature_organize_desc': { en: 'Store receipts, manuals, and photos linked to maintenance records.', fi: 'Säilytä kuitit, ohjekirjat ja kuvat yhdessä huoltotietueisiin.' },
+  'landing.feature_insights': { en: 'Get Insights', fi: 'Saada tietoa' },
+  'landing.feature_insights_desc': { en: 'Visualize spending patterns and identify cost-saving opportunities.', fi: 'Näe kustannusmallit ja säästömahdollisuudet.' },
+
   // Auth
   'auth.email': { en: 'Email Address', fi: 'Sähköpostiosoite' },
   'auth.password': { en: 'Password', fi: 'Salasana' },

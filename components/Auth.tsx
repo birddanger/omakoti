@@ -4,6 +4,7 @@ import { authService } from '../services/authService';
 import { Link, useNavigate } from 'react-router-dom';
 import { Hammer, Loader2, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 interface AuthProps {
   onLogin: (user: User) => void;
@@ -35,6 +36,11 @@ export const LoginPage: React.FC<AuthProps> = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      {/* Language Selector - Top Right */}
+      <div className="absolute top-6 right-6">
+        <LanguageSelector />
+      </div>
+
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-slate-100">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 text-blue-600 mb-4">
@@ -122,6 +128,11 @@ export const RegisterPage: React.FC<AuthProps> = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      {/* Language Selector - Top Right */}
+      <div className="absolute top-6 right-6">
+        <LanguageSelector />
+      </div>
+
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-slate-100">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 text-blue-600 mb-4">
