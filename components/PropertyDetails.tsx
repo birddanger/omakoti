@@ -305,154 +305,183 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         </div>
       </div>
 
-      {/* Planned Tasks Section - TOP */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6">
-          <div className="space-y-12">
-            {/* Section 1: Active Plan */}
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-slate-900 flex items-center">
-                  <ListChecks className="w-5 h-5 mr-2 text-purple-600" />
-                  {t('plan.current_tasks')}
-                </h3>
-                <button 
-                  onClick={() => setIsAddTaskOpen(true)}
-                  className="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition-colors flex items-center"
-                >
-                  <Plus className="w-4 h-4 mr-1" /> {t('plan.add_custom')}
-                </button>
-              </div>
-
-              {propertyTasks.length > 0 ? (
-                <div className="space-y-3">
-                  {propertyTasks.map(task => (
-                    <div key={task.id} className="group flex items-start gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100 hover:border-slate-200 hover:bg-slate-100 transition-all relative">
-                      <input type="checkbox" className="flex-shrink-0 w-5 h-5 mt-0.5 text-purple-600 rounded" />
-                      <div className="flex-1">
-                        <div className="font-medium text-slate-900">{task.title}</div>
-                        <div className="text-sm text-slate-600 mt-1">Due: {task.dueDate}</div>
-                      </div>
-                      <div className="flex-shrink-0 text-right">
-                        <div className={`inline-block px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${
-                          task.priority === 'High' ? 'bg-red-100 text-red-700' : 
-                          task.priority === 'Medium' ? 'bg-orange-100 text-orange-700' : 
-                          'bg-green-100 text-green-700'
-                        }`}>
-                          {task.priority}
-                        </div>
-                        <div className="text-sm font-semibold text-slate-900 mt-2">{task.estimatedCost}</div>
-                      </div>
-                      <button 
-                        onClick={() => onCompletePlannedTask(task)}
-                        className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-green-500 p-2 transition-all"
-                      >
-                        <CheckSquare className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => onDeletePlannedTask(task.id)}
-                        className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 p-2 transition-all"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-                  <p className="text-slate-500">{t('plan.no_tasks')}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Section 2: AI Suggestions */}
-            <div className="pt-8 border-t border-slate-100">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center p-2 bg-purple-100 text-purple-600 rounded-full mb-3">
-                   <Sparkles className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">{t('plan.ai_suggestions')}</h3>
-                <button 
-                  onClick={handleGeneratePlan}
-                  disabled={isLoadingAI}
-                  className="inline-flex items-center mt-4 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg disabled:opacity-50"
-                >
-                  {isLoadingAI ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {t('plan.generating')}
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      {t('plan.gen_plan')}
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {aiError && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">{aiError}</p>
-                </div>
-              )}
-
-              {predictions.length > 0 ? (
-                <div className="space-y-3">
-                  {predictions.map((item, idx) => (
-                    <div key={idx} className="flex gap-3 p-4 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors">
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start mb-2">
-                          <h5 className="text-lg font-bold text-slate-900 leading-tight">{item.task}</h5>
-                        </div>
-                        <span className={`inline-block mb-2 px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${
-                             item.priority === 'High' ? 'bg-red-100 text-red-700' : item.priority === 'Medium' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
-                          }`}>
-                            {item.priority}
-                        </span>
-                        <p className="text-slate-600 text-sm">{item.reason}</p>
-                        <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-500">
-                          <span className="bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                            Due: {item.estimatedDate}
-                          </span>
-                          <span className="bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                            Cost: {item.estimatedCost}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="pl-3 mt-auto">
-                         <button 
-                           onClick={() => handleAcceptPrediction(item)}
-                           className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
-                         >
-                           {t('plan.accept')}
-                         </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-                  <p className="text-slate-500">{t('plan.run_ai')}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Appliances Section */}
       {id && <AppliancesList propertyId={id} />}
 
       {/* Seasonal Checklists Section */}
       {id && <SeasonalChecklists propertyId={id} onAddPlannedTask={onAddPlannedTask} />}
 
-      {/* Maintenance History Section - BOTTOM */}
+      {/* Maintenance & Planning Tabs */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Tab Navigation */}
+        <div className="border-b border-slate-200 px-6 flex gap-0">
+          <button
+            onClick={() => setActiveTab('planning')}
+            className={`px-6 py-4 font-medium text-sm border-b-2 transition-colors ${
+              activeTab === 'planning'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <ListChecks className="w-4 h-4" />
+              {t('plan.current_tasks')}
+            </div>
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            className={`px-6 py-4 font-medium text-sm border-b-2 transition-colors ${
+              activeTab === 'history'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Paperclip className="w-4 h-4" />
+              {t('detail.recorded_maint')}
+            </div>
+          </button>
+        </div>
+
         <div className="p-6">
-          <div className="space-y-4">
-              <div className="flex justify-between items-center mb-6">
+          {/* Planning Tab */}
+          {activeTab === 'planning' && (
+            <div className="space-y-12">
+              {/* Section 1: Active Plan */}
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-slate-900">
+                    {t('plan.current_tasks')}
+                  </h3>
+                  <button 
+                    onClick={() => setIsAddTaskOpen(true)}
+                    className="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition-colors flex items-center"
+                  >
+                    <Plus className="w-4 h-4 mr-1" /> {t('plan.add_custom')}
+                  </button>
+                </div>
+
+                {propertyTasks.length > 0 ? (
+                  <div className="space-y-3">
+                    {propertyTasks.map(task => (
+                      <div key={task.id} className="group flex items-start gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100 hover:border-slate-200 hover:bg-slate-100 transition-all relative">
+                        <input type="checkbox" className="flex-shrink-0 w-5 h-5 mt-0.5 text-purple-600 rounded" />
+                        <div className="flex-1">
+                          <div className="font-medium text-slate-900">{task.title}</div>
+                          <div className="text-sm text-slate-600 mt-1">Due: {task.dueDate}</div>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          <div className={`inline-block px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${
+                            task.priority === 'High' ? 'bg-red-100 text-red-700' : 
+                            task.priority === 'Medium' ? 'bg-orange-100 text-orange-700' : 
+                            'bg-green-100 text-green-700'
+                          }`}>
+                            {task.priority}
+                          </div>
+                          <div className="text-sm font-semibold text-slate-900 mt-2">{task.estimatedCost}</div>
+                        </div>
+                        <button 
+                          onClick={() => onCompletePlannedTask(task)}
+                          className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-green-500 p-2 transition-all"
+                        >
+                          <CheckSquare className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => onDeletePlannedTask(task.id)}
+                          className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 p-2 transition-all"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                    <p className="text-slate-500">{t('plan.no_tasks')}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Section 2: AI Suggestions */}
+              <div className="pt-8 border-t border-slate-100">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center p-2 bg-purple-100 text-purple-600 rounded-full mb-3">
+                     <Sparkles className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">{t('plan.ai_suggestions')}</h3>
+                  <button 
+                    onClick={handleGeneratePlan}
+                    disabled={isLoadingAI}
+                    className="inline-flex items-center mt-4 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg disabled:opacity-50"
+                  >
+                    {isLoadingAI ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {t('plan.generating')}
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        {t('plan.gen_plan')}
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {aiError && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-700">{aiError}</p>
+                  </div>
+                )}
+
+                {predictions.length > 0 ? (
+                  <div className="space-y-3">
+                    {predictions.map((item, idx) => (
+                      <div key={idx} className="flex gap-3 p-4 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors">
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-2">
+                            <h5 className="text-lg font-bold text-slate-900 leading-tight">{item.task}</h5>
+                          </div>
+                          <span className={`inline-block mb-2 px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${
+                               item.priority === 'High' ? 'bg-red-100 text-red-700' : item.priority === 'Medium' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
+                            }`}>
+                              {item.priority}
+                          </span>
+                          <p className="text-slate-600 text-sm">{item.reason}</p>
+                          <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-500">
+                            <span className="bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                              Due: {item.estimatedDate}
+                            </span>
+                            <span className="bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                              Cost: {item.estimatedCost}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="pl-3 mt-auto">
+                           <button 
+                             onClick={() => handleAcceptPrediction(item)}
+                             className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
+                           >
+                             {t('plan.accept')}
+                           </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                    <p className="text-slate-500">{t('plan.run_ai')}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* History Tab */}
+          {activeTab === 'history' && (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-slate-800">{t('detail.recorded_maint')}</h3>
                 <button 
                   onClick={openAddModal}
@@ -625,8 +654,9 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 </div>
               )}
             </div>
-          </div>
+          )}
         </div>
+      </div>
 
       {/* Log Modal (Add/Edit) */}
       {isAddLogOpen && (
