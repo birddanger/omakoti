@@ -1,5 +1,7 @@
 import { authService } from './authService';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 export interface PropertyAccess {
   id: string;
   userId?: string;
@@ -16,7 +18,7 @@ export const accessService = {
   // Get all users with access to a property
   async getPropertyAccess(propertyId: string): Promise<PropertyAccess[]> {
     const token = authService.getToken();
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/access/properties/${propertyId}/access`, {
+    const response = await fetch(`${API_URL}/access/properties/${propertyId}/access`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Failed to fetch access list');
@@ -27,7 +29,7 @@ export const accessService = {
   // Share property with a family member
   async shareProperty(propertyId: string, email: string, role: string): Promise<PropertyAccess> {
     const token = authService.getToken();
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/access/properties/${propertyId}/share`, {
+    const response = await fetch(`${API_URL}/access/properties/${propertyId}/share`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,7 +47,7 @@ export const accessService = {
   // Update permission level
   async updateAccess(propertyId: string, accessId: string, role: string): Promise<void> {
     const token = authService.getToken();
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/access/properties/${propertyId}/access/${accessId}`, {
+    const response = await fetch(`${API_URL}/access/properties/${propertyId}/access/${accessId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ export const accessService = {
   // Remove access
   async removeAccess(propertyId: string, accessId: string): Promise<void> {
     const token = authService.getToken();
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/access/properties/${propertyId}/access/${accessId}`, {
+    const response = await fetch(`${API_URL}/access/properties/${propertyId}/access/${accessId}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -69,7 +71,7 @@ export const accessService = {
   // Get all properties accessible to current user
   async getAccessibleProperties(): Promise<any[]> {
     const token = authService.getToken();
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/access/properties/accessible/all`, {
+    const response = await fetch(`${API_URL}/access/properties/accessible/all`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Failed to fetch accessible properties');
