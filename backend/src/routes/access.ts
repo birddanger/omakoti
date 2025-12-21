@@ -25,9 +25,12 @@ router.get('/properties/:propertyId/access', verifyToken, async (req: AuthReques
       return res.status(404).json({ error: 'Property not found' });
     }
 
-    // Check if user is owner or admin
+    // Check if user is owner or has admin/edit access
+    const isOwner = property.userId === userId;
     const access = property.propertyAccess.find(a => a.userId === userId);
-    if (!access || !['owner', 'admin'].includes(access.role)) {
+    const isAdmin = access && ['owner', 'admin'].includes(access.role);
+
+    if (!isOwner && !isAdmin) {
       return res.status(403).json({ error: 'Not authorized to view access' });
     }
 
@@ -76,8 +79,11 @@ router.post('/properties/:propertyId/share', verifyToken, async (req: AuthReques
       return res.status(404).json({ error: 'Property not found' });
     }
 
+    const isOwner = property.userId === userId;
     const userAccess = property.propertyAccess.find(a => a.userId === userId);
-    if (!userAccess || !['owner', 'admin'].includes(userAccess.role)) {
+    const isAdmin = userAccess && ['owner', 'admin'].includes(userAccess.role);
+
+    if (!isOwner && !isAdmin) {
       return res.status(403).json({ error: 'Not authorized to share property' });
     }
 
@@ -162,8 +168,11 @@ router.put('/properties/:propertyId/access/:accessId', verifyToken, async (req: 
       return res.status(404).json({ error: 'Property not found' });
     }
 
+    const isOwner = property.userId === userId;
     const userAccess = property.propertyAccess.find(a => a.userId === userId);
-    if (!userAccess || !['owner', 'admin'].includes(userAccess.role)) {
+    const isAdmin = userAccess && ['owner', 'admin'].includes(userAccess.role);
+
+    if (!isOwner && !isAdmin) {
       return res.status(403).json({ error: 'Not authorized to modify access' });
     }
 
@@ -205,8 +214,11 @@ router.delete('/properties/:propertyId/access/:accessId', verifyToken, async (re
       return res.status(404).json({ error: 'Property not found' });
     }
 
+    const isOwner = property.userId === userId;
     const userAccess = property.propertyAccess.find(a => a.userId === userId);
-    if (!userAccess || !['owner', 'admin'].includes(userAccess.role)) {
+    const isAdmin = userAccess && ['owner', 'admin'].includes(userAccess.role);
+
+    if (!isOwner && !isAdmin) {
       return res.status(403).json({ error: 'Not authorized to remove access' });
     }
 
