@@ -1,16 +1,12 @@
 import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { verifyToken } from '../middleware/auth.js';
+import { authMiddleware, AuthRequest } from '../middleware/auth.js';
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
-interface AuthRequest extends Request {
-  userId?: string;
-}
-
 // Get all users with access to a property
-router.get('/properties/:propertyId/access', verifyToken, async (req: AuthRequest, res: Response) => {
+router.get('/properties/:propertyId/access', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { propertyId } = req.params;
     const userId = req.userId;
@@ -55,7 +51,7 @@ router.get('/properties/:propertyId/access', verifyToken, async (req: AuthReques
 });
 
 // Share property with a family member (email)
-router.post('/properties/:propertyId/share', verifyToken, async (req: AuthRequest, res: Response) => {
+router.post('/properties/:propertyId/share', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { propertyId } = req.params;
     const { email, role } = req.body;
@@ -148,7 +144,7 @@ router.post('/properties/:propertyId/share', verifyToken, async (req: AuthReques
 });
 
 // Update permission level for a user
-router.put('/properties/:propertyId/access/:accessId', verifyToken, async (req: AuthRequest, res: Response) => {
+router.put('/properties/:propertyId/access/:accessId', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { propertyId, accessId } = req.params;
     const { role } = req.body;
@@ -199,7 +195,7 @@ router.put('/properties/:propertyId/access/:accessId', verifyToken, async (req: 
 });
 
 // Remove access for a user
-router.delete('/properties/:propertyId/access/:accessId', verifyToken, async (req: AuthRequest, res: Response) => {
+router.delete('/properties/:propertyId/access/:accessId', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { propertyId, accessId } = req.params;
     const userId = req.userId;
@@ -244,7 +240,7 @@ router.delete('/properties/:propertyId/access/:accessId', verifyToken, async (re
 });
 
 // Get all properties accessible to current user (including shared)
-router.get('/properties/accessible/all', verifyToken, async (req: AuthRequest, res: Response) => {
+router.get('/properties/accessible/all', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId;
 
