@@ -11,6 +11,7 @@ import { Property, MaintenanceLog, PropertyType, User, AppDocument, HeatingType,
 import { Plus, Search, Loader2, Download, AlertCircle } from 'lucide-react';
 import { authService } from './services/authService';
 import { propertyService } from './services/propertyService';
+import { accessService } from './services/accessService';
 import { logsService } from './services/logsService';
 import { tasksService } from './services/tasksService';
 import { documentsService } from './services/documentsService';
@@ -53,13 +54,21 @@ const MainApp: React.FC = () => {
     setIsDataLoading(true);
     setError(null);
     try {
-      const [propsData, logsData, docsData, tasksData] = await Promise.all([
+      const [propsData, sharedPropsData, logsData, docsData, tasksData] = await Promise.all([
         propertyService.getAll(),
+        accessService.getAccessibleProperties().catch(() => []), // Fallback to empty array if fails
         logsService.getAll(),
         documentsService.getAll(),
         tasksService.getAll()
       ]);
-      setProperties(propsData);
+      
+      // Combine owned and shared properties, removing duplicates
+      const allProperties = [
+        ...propsData,
+        ...sharedPropsData.filter(sp => !propsData.find(p => p.id === sp.id))
+      ];
+      
+      setProperties(allProperties);
       setLogs(logsData);
       setDocuments(docsData);
       setPlannedTasks(tasksData);
