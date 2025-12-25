@@ -1,4 +1,14 @@
+import { authService } from './authService';
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const getHeaders = (): HeadersInit => {
+  const token = authService.getToken();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+};
 
 export interface Warranty {
   id: string;
@@ -23,10 +33,7 @@ export const warrantiesService = {
   async getByProperty(propertyId: string): Promise<Warranty[]> {
     const response = await fetch(`${API_URL}/warranties/${propertyId}`, {
       method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      headers: getHeaders()
     });
 
     if (!response.ok) {
@@ -39,10 +46,7 @@ export const warrantiesService = {
   async getByAppliance(applianceId: string): Promise<Warranty | null> {
     const response = await fetch(`${API_URL}/warranties/appliance/${applianceId}`, {
       method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      headers: getHeaders()
     });
 
     if (response.status === 404) {
@@ -59,11 +63,7 @@ export const warrantiesService = {
   async create(warranty: WarrantyInput): Promise<Warranty> {
     const response = await fetch(`${API_URL}/warranties`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      },
+      headers: getHeaders(),
       body: JSON.stringify(warranty)
     });
 
@@ -77,11 +77,7 @@ export const warrantiesService = {
   async update(id: string, warranty: Partial<WarrantyInput>): Promise<Warranty> {
     const response = await fetch(`${API_URL}/warranties/${id}`, {
       method: 'PUT',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      },
+      headers: getHeaders(),
       body: JSON.stringify(warranty)
     });
 
@@ -95,10 +91,7 @@ export const warrantiesService = {
   async delete(id: string): Promise<void> {
     const response = await fetch(`${API_URL}/warranties/${id}`, {
       method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      headers: getHeaders()
     });
 
     if (!response.ok) {

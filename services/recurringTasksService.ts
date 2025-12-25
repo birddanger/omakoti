@@ -1,4 +1,14 @@
+import { authService } from './authService';
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const getHeaders = (): HeadersInit => {
+  const token = authService.getToken();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+};
 
 export interface RecurringTask {
   id: string;
@@ -31,10 +41,7 @@ export const recurringTasksService = {
   async getByProperty(propertyId: string): Promise<RecurringTask[]> {
     const response = await fetch(`${API_URL}/recurring-tasks/${propertyId}`, {
       method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      headers: getHeaders()
     });
 
     if (!response.ok) {
@@ -47,11 +54,7 @@ export const recurringTasksService = {
   async create(task: RecurringTaskInput): Promise<{ recurringTask: RecurringTask; plannedTask: any }> {
     const response = await fetch(`${API_URL}/recurring-tasks`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      },
+      headers: getHeaders(),
       body: JSON.stringify(task)
     });
 
@@ -65,11 +68,7 @@ export const recurringTasksService = {
   async update(id: string, task: Partial<RecurringTaskInput>): Promise<RecurringTask> {
     const response = await fetch(`${API_URL}/recurring-tasks/${id}`, {
       method: 'PUT',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      },
+      headers: getHeaders(),
       body: JSON.stringify(task)
     });
 
@@ -83,10 +82,7 @@ export const recurringTasksService = {
   async delete(id: string): Promise<void> {
     const response = await fetch(`${API_URL}/recurring-tasks/${id}`, {
       method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      headers: getHeaders()
     });
 
     if (!response.ok) {
@@ -97,10 +93,7 @@ export const recurringTasksService = {
   async generateTasks(): Promise<{ message: string; tasks: any[] }> {
     const response = await fetch(`${API_URL}/recurring-tasks/generate`, {
       method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      headers: getHeaders()
     });
 
     if (!response.ok) {
