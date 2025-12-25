@@ -7,6 +7,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import AppliancesList from './AppliancesList';
 import SeasonalChecklists from './SeasonalChecklists';
 import FamilyAccess from './FamilyAccess';
+import WarrantiesManagement from './WarrantiesManagement';
+import RecurringTasksManagement from './RecurringTasksManagement';
 
 interface PropertyDetailsProps {
   properties: Property[];
@@ -321,6 +323,20 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
 
       {/* Seasonal Checklists Section */}
       {id && <SeasonalChecklists propertyId={id} onAddPlannedTask={onAddPlannedTask} />}
+
+      {/* Warranties Section */}
+      {id && property?.appliances && (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6">
+          <WarrantiesManagement appliances={property.appliances} />
+        </div>
+      )}
+
+      {/* Recurring Tasks Section */}
+      {id && (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6">
+          <RecurringTasksManagement propertyId={id} onTaskCreated={() => {}} />
+        </div>
+      )}
 
       {/* Maintenance & Planning Tabs */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
