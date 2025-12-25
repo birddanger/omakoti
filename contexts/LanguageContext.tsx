@@ -6,6 +6,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  translations: Record<string, string>;
 }
 
 const translations: Record<string, Record<Language, string>> = {
@@ -228,6 +229,52 @@ const translations: Record<string, Record<Language, string>> = {
   'access.edit_desc': { en: 'Can add tasks and logs, but not manage access', fi: 'Voi lisätä tehtäviä ja merkintöjä, mutta ei hallitse oikeuksia' },
   'access.admin': { en: 'Admin', fi: 'Pääkäyttäjä' },
   'access.admin_desc': { en: 'Full access including inviting others', fi: 'Täysi oikeus mukaan lukien muiden kutsuminen' },
+
+  // Warranties
+  'warranties': { en: 'Warranties', fi: 'Takuut' },
+  'warranty': { en: 'Warranty', fi: 'Takuu' },
+  'addWarranty': { en: 'Add Warranty', fi: 'Lisää takuu' },
+  'editWarranty': { en: 'Edit Warranty', fi: 'Muokkaa takuuta' },
+  'deleteWarranty': { en: 'Delete Warranty', fi: 'Poista takuu' },
+  'noWarranty': { en: 'No warranty information', fi: 'Ei takuutietoja' },
+  'provider': { en: 'Provider', fi: 'Palveluntarjoaja' },
+  'expirationDate': { en: 'Expiration Date', fi: 'Päättymispäivä' },
+  'coverage': { en: 'Coverage', fi: 'Vakuutus' },
+  'coverageDetails': { en: 'Coverage Details', fi: 'Vakuutuksen yksityiskohdat' },
+  'expired': { en: 'Expired', fi: 'Vanhentunut' },
+  'warrantyValidationError': { en: 'Please fill in all required fields', fi: 'Täytä kaikki vaaditut kentät' },
+  'installed': { en: 'Installed', fi: 'Asennettu' },
+
+  // Recurring Tasks
+  'recurringMaintenance': { en: 'Recurring Maintenance', fi: 'Toistuva huolto' },
+  'recurringTask': { en: 'Recurring Task', fi: 'Toistuva tehtävä' },
+  'recurringTasks': { en: 'Recurring Tasks', fi: 'Toistuvat tehtävät' },
+  'addRecurringTask': { en: 'Add Task', fi: 'Lisää tehtävä' },
+  'createTask': { en: 'Create Task', fi: 'Luo tehtävä' },
+  'editTask': { en: 'Edit Task', fi: 'Muokkaa tehtävää' },
+  'deleteTask': { en: 'Delete Task', fi: 'Poista tehtävä' },
+  'noRecurringTasks': { en: 'No recurring tasks', fi: 'Ei toistuvia tehtäviä' },
+  'taskTitle': { en: 'Task title', fi: 'Tehtävän otsikko' },
+  'taskDescription': { en: 'Task description', fi: 'Tehtävän kuvaus' },
+  'frequency': { en: 'Frequency', fi: 'Toistumisväli' },
+  'weekly': { en: 'Weekly', fi: 'Viikoittain' },
+  'biweekly': { en: 'Bi-weekly', fi: 'Kahdesti viikossa' },
+  'monthly': { en: 'Monthly', fi: 'Kuukausittain' },
+  'quarterly': { en: 'Quarterly', fi: 'Neljännesvuosittain' },
+  'biannual': { en: 'Bi-annual', fi: 'Puolivuosittain' },
+  'annual': { en: 'Annual', fi: 'Vuosittain' },
+  'estimatedCost': { en: 'Estimated Cost', fi: 'Arvioitu kustannus' },
+  'nextDue': { en: 'Next due', fi: 'Seuraava erääntymis' },
+  'days': { en: 'days', fi: 'päivää' },
+  'overdue': { en: 'Overdue', fi: 'Myöhässä' },
+  'general': { en: 'General', fi: 'Yleinen' },
+  'plumbing': { en: 'Plumbing', fi: 'Putkityöt' },
+  'electrical': { en: 'Electrical', fi: 'Sähkötyöt' },
+  'hvac': { en: 'HVAC', fi: 'LVIA' },
+  'roofing': { en: 'Roofing', fi: 'Katon työt' },
+  'landscaping': { en: 'Landscaping', fi: 'Puutarhanhoito' },
+  'appliance': { en: 'Appliance', fi: 'Laite' },
+  'titleRequired': { en: 'Title is required', fi: 'Otsikko on pakollinen' },
   'access.owner': { en: 'Owner', fi: 'Omistaja' },
   'access.owner_desc': { en: 'Property owner, has all permissions', fi: 'Kiinteistön omistaja, kaikki oikeudet' },
   'access.current': { en: 'Current Access', fi: 'Nykyiset oikeudet' },
@@ -262,8 +309,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return key;
   };
 
+  const translationsForLanguage = Object.keys(translations).reduce((acc, key) => {
+    acc[key] = translations[key][language];
+    return acc;
+  }, {} as Record<string, string>);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, translations: translationsForLanguage }}>
       {children}
     </LanguageContext.Provider>
   );

@@ -20,37 +20,11 @@ model User {
   plannedTasks PlannedTask[]
   documents AppDocument[]
   propertyAccess PropertyAccess[]
+  recurringTasks RecurringTask[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Property {
-  id    String     @id @default(cuid())
-  userId String
-  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  name String
-  address String
-  type String  // PropertyType enum value
-  yearBuilt Int
-  area Float
-  heatingType String  // HeatingType enum value
-  floors Int
-  purchaseDate String
-  description String?
-  
-  maintenanceLogs MaintenanceLog[]
-  plannedTasks PlannedTask[]
-  documents AppDocument[]
-  appliances Appliance[]
-  seasonalChecklists SeasonalChecklist[]
-  propertyAccess PropertyAccess[]
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@index([userId])
-}
 
 model MaintenanceLog {
   id    String     @id @default(cuid())
@@ -106,6 +80,7 @@ model AppDocument {
   log MaintenanceLog? @relation(fields: [logId], references: [id], onDelete: SetNull)
   
   appliances Appliance[]
+  warranty Warranty?
   
   name String
   type String  // MIME type
@@ -132,12 +107,31 @@ model Appliance {
   monthInstalled Int
   manualId String?
   manual AppDocument? @relation(fields: [manualId], references: [id], onDelete: SetNull)
+  warranty Warranty?
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   @@index([propertyId])
   @@index([manualId])
+}
+
+model Warranty {
+  id    String     @id @default(cuid())
+  applianceId String @unique
+  appliance Appliance @relation(fields: [applianceId], references: [id], onDelete: Cascade)
+  
+  provider String
+  expirationDate String
+  coverageDetails String?
+  documentId String? @unique
+  document AppDocument? @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([applianceId])
+  @@index([documentId])
 }
 
 model SeasonalChecklist {
@@ -173,5 +167,59 @@ model PropertyAccess {
   
   @@unique([propertyId, userId])
   @@index([propertyId])
+  @@index([userId])
+}
+
+model RecurringTask {
+  id    String     @id @default(cuid())
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title String
+  description String?
+  frequency String  // weekly, biweekly, monthly, quarterly, biannual, annual
+  priority String  // High, Medium, Low
+  estimatedCost String?
+  category String  // General, Plumbing, Electrical, HVAC, Roofing, Landscaping, Appliance
+  
+  nextDueDate String
+  lastGeneratedDate String?
+  isActive Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([propertyId])
+  @@index([userId])
+}
+
+model Property {
+  id    String     @id @default(cuid())
+  userId String
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name String
+  address String
+  type String  // PropertyType enum value
+  yearBuilt Int
+  area Float
+  heatingType String  // HeatingType enum value
+  floors Int
+  purchaseDate String
+  description String?
+  
+  maintenanceLogs MaintenanceLog[]
+  plannedTasks PlannedTask[]
+  documents AppDocument[]
+  appliances Appliance[]
+  seasonalChecklists SeasonalChecklist[]
+  propertyAccess PropertyAccess[]
+  recurringTasks RecurringTask[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
   @@index([userId])
 }

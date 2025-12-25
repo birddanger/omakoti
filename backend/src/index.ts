@@ -10,6 +10,8 @@ import documentRoutes from './routes/documents.js';
 import applianceRoutes from './routes/appliances.js';
 import checklistRoutes from './routes/checklists.js';
 import accessRoutes from './routes/access.js';
+import warrantiesRoutes from './routes/warranties.js';
+import recurringTasksRoutes from './routes/recurring-tasks.js';
 
 dotenv.config();
 
@@ -74,6 +76,10 @@ try {
   console.log('Checklists routes loaded');
   app.use('/api/access', accessRoutes);
   console.log('Access routes loaded');
+  app.use('/api/warranties', warrantiesRoutes);
+  console.log('Warranties routes loaded');
+  app.use('/api/recurring-tasks', recurringTasksRoutes);
+  console.log('Recurring tasks routes loaded');
 } catch (err: any) {
   console.error('Error loading routes:', err?.message || err);
   process.exit(1);
