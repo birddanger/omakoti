@@ -3,6 +3,7 @@ import { Appliance } from '../types';
 import { appliancesService } from '../services/appliancesService';
 import { Trash2, Plus, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import WarrantiesManagement from './WarrantiesManagement';
 
 interface AppliancesListProps {
   propertyId: string;
@@ -109,26 +110,33 @@ const AppliancesList: React.FC<AppliancesListProps> = ({ propertyId }) => {
           {appliances.length > 0 && (
             <div className="mb-6 grid grid-cols-1 gap-4">
               {appliances.map((appliance) => (
-                <div key={appliance.id} className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-800">{appliance.type}</h4>
-                      {appliance.modelNumber && (
+                <div key={appliance.id} className="border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
+                  <div className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-800">{appliance.type}</h4>
+                        {appliance.modelNumber && (
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium">{t('appliances.model')}:</span> {appliance.modelNumber}
+                          </p>
+                        )}
                         <p className="text-sm text-gray-600">
-                          <span className="font-medium">{t('appliances.model')}:</span> {appliance.modelNumber}
+                          <span className="font-medium">{t('detail.recorded_maint')}:</span> {monthNames[appliance.monthInstalled - 1]} {appliance.yearInstalled}
                         </p>
-                      )}
-                      <p className="text-sm text-gray-600">
-                        <span className="font-medium">{t('detail.recorded_maint')}:</span> {monthNames[appliance.monthInstalled - 1]} {appliance.yearInstalled}
-                      </p>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteAppliance(appliance.id)}
+                        className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        title={t('appliances.delete_confirm')}
+                      >
+                        <Trash2 size={20} />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => handleDeleteAppliance(appliance.id)}
-                      className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                      title={t('appliances.delete_confirm')}
-                    >
-                      <Trash2 size={20} />
-                    </button>
+                  </div>
+                  
+                  {/* Warranty Section for each appliance */}
+                  <div className="border-t border-gray-200 bg-gray-50 p-4">
+                    <WarrantiesManagement appliances={[appliance]} onWarrantyUpdated={() => loadAppliances()} />
                   </div>
                 </div>
               ))}
