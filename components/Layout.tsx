@@ -3,6 +3,7 @@ import { Home, Hammer, FileText, Settings, Menu, X, LogOut, FolderOpen, Globe } 
 import { Link, useLocation } from 'react-router-dom';
 import { User } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import NotificationBell from './NotificationBell';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -126,6 +127,9 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
                 EN
               </button>
             </div>
+
+            {/* Notifications */}
+            <NotificationBell />
 
             <div className="flex items-center gap-3 pl-4 border-l border-slate-100">
               <div className="text-right hidden sm:block">

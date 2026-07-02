@@ -40,7 +40,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const [showFamilyAccess, setShowFamilyAccess] = useState(false);
-  const { t, language } = useLanguage();
+  const { t, language, formatCurrency } = useLanguage();
 
   const property = properties.find(p => p.id === id);
   const propertyLogs = logs.filter(l => l.propertyId === id).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -662,7 +662,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                                 )}
                               </div>
                               <div className="sm:text-right">
-                                <span className="text-sm font-bold text-slate-900">${log.cost.toLocaleString()}</span>
+                                <span className="text-sm font-bold text-slate-900">{formatCurrency(log.cost)}</span>
                               </div>
                             </div>
                           </div>

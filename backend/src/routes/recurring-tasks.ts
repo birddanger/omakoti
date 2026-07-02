@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { authMiddleware } from '../middleware/auth.js';
+import { generateDueRecurringTasks } from '../services/recurringTaskGenerator.js';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -241,13 +242,15 @@ router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-// Generate planned tasks for active recurring tasks (to be called by a cron job or manually)
+// Generate planned tasks for DUE recurring tasks (called by the daily scheduler
+// or manually by the user). Only materialises tasks that have actually reached
+// their nextDueDate, and de-duplicates against existing pending tasks.
 router.post('/generate', authMiddleware, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
 
-    // Get all active recurring tasks owned by or with edit access by this user
-    const recurringTasks = await prisma.recurringTask.findMany({
+    // Restrict generation to recurring tasks this user can edit.
+    const editableTasks = await prisma.recurringTask.findMany({
       where: {
         isActive: true,
         property: {
@@ -264,38 +267,13 @@ router.post('/generate', authMiddleware, async (req: Request, res: Response) => 
             }
           ]
         }
-      }
+      },
+      select: { id: true }
     });
 
-    const generatedTasks = [];
-
-    for (const task of recurringTasks) {
-      const nextDueDate = calculateNextDueDate(task.frequency, task.lastGeneratedDate || undefined);
-
-      // Create planned task
-      const plannedTask = await prisma.plannedTask.create({
-        data: {
-          propertyId: task.propertyId,
-          userId: task.userId,
-          title: `${task.title} (Recurring)`,
-          dueDate: nextDueDate,
-          priority: task.priority,
-          estimatedCost: task.estimatedCost || '0',
-          status: 'pending'
-        }
-      });
-
-      // Update recurring task's lastGeneratedDate
-      await prisma.recurringTask.update({
-        where: { id: task.id },
-        data: {
-          lastGeneratedDate: new Date().toISOString().split('T')[0],
-          nextDueDate
-        }
-      });
-
-      generatedTasks.push(plannedTask);
-    }
+    const generatedTasks = await generateDueRecurringTasks(prisma, {
+      recurringTaskIds: editableTasks.map(t => t.id)
+    });
 
     res.json({
       message: `Generated ${generatedTasks.length} planned tasks from recurring tasks`,

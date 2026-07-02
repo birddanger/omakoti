@@ -13,7 +13,7 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ properties, logs, plannedTasks }) => {
-  const { t } = useLanguage();
+  const { t, formatCurrency, formatDate } = useLanguage();
   const totalSpend = useMemo(() => logs.reduce((acc, log) => acc + log.cost, 0), [logs]);
   
   const recentLogs = useMemo(() => {
@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ properties, logs, plannedTasks })
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-500">{t('dash.total_spend')}</p>
-              <p className="text-3xl font-bold text-slate-900 mt-1">${totalSpend.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-slate-900 mt-1">{formatCurrency(totalSpend)}</p>
             </div>
             <div className="p-3 bg-green-50 rounded-lg text-green-600">
               <DollarSign className="w-6 h-6" />
@@ -140,7 +140,7 @@ const Dashboard: React.FC<DashboardProps> = ({ properties, logs, plannedTasks })
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-900">{log.title}</p>
-                    <p className="text-xs text-slate-500">{log.date} • ${log.cost.toLocaleString()}</p>
+                    <p className="text-xs text-slate-500">{formatDate(log.date)} • {formatCurrency(log.cost)}</p>
                   </div>
                 </div>
               ))
@@ -169,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ properties, logs, plannedTasks })
                 <BarChart data={spendByCategory}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} tickFormatter={(value) => `$${value}`} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} tickFormatter={(value) => formatCurrency(Number(value))} />
                   <Tooltip 
                     cursor={{fill: '#f1f5f9'}}
                     contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}

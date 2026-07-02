@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { formatCurrency as fmtCurrency, formatDate as fmtDate } from '../utils/format';
 
 type Language = 'en' | 'fi';
 
@@ -7,6 +8,8 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
   translations: Record<string, string>;
+  formatCurrency: (amount: number | null | undefined, decimals?: number) => string;
+  formatDate: (isoDate: string | null | undefined) => string;
 }
 
 const translations: Record<string, Record<Language, string>> = {
@@ -283,6 +286,16 @@ const translations: Record<string, Record<Language, string>> = {
   'access.send': { en: 'Send Invite', fi: 'Lähetä kutsu' },
   'access.remove': { en: 'Remove Access', fi: 'Poista oikeudet' },
   'access.sure_remove': { en: 'Are you sure you want to remove this person\'s access?', fi: 'Oletko varma, että haluat poistaa tämän henkilön oikeudet?' },
+
+  // Notifications & Reminders
+  'notif.title': { en: 'Notifications', fi: 'Ilmoitukset' },
+  'notif.none': { en: "You're all caught up!", fi: 'Ei uusia ilmoituksia!' },
+  'notif.mark_all_read': { en: 'Mark all as read', fi: 'Merkitse kaikki luetuiksi' },
+  'notif.view_all': { en: 'View all', fi: 'Näytä kaikki' },
+  'notif.task_due': { en: 'Task due soon', fi: 'Tehtävä erääntyy pian' },
+  'notif.task_overdue': { en: 'Task overdue', fi: 'Tehtävä myöhässä' },
+  'notif.warranty_expiring': { en: 'Warranty expiring', fi: 'Takuu päättymässä' },
+  'notif.recurring_generated': { en: 'New recurring task', fi: 'Uusi toistuva tehtävä' },
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -314,8 +327,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return acc;
   }, {} as Record<string, string>);
 
+  const formatCurrency = (amount: number | null | undefined, decimals = 0) =>
+    fmtCurrency(amount, language, decimals);
+
+  const formatDate = (isoDate: string | null | undefined) => fmtDate(isoDate, language);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, translations: translationsForLanguage }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, translations: translationsForLanguage, formatCurrency, formatDate }}>
       {children}
     </LanguageContext.Provider>
   );

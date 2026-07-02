@@ -12,6 +12,8 @@ import checklistRoutes from './routes/checklists.js';
 import accessRoutes from './routes/access.js';
 import warrantiesRoutes from './routes/warranties.js';
 import recurringTasksRoutes from './routes/recurring-tasks.js';
+import notificationsRoutes from './routes/notifications.js';
+import { startScheduler } from './scheduler.js';
 
 dotenv.config();
 
@@ -80,6 +82,8 @@ try {
   console.log('Warranties routes loaded');
   app.use('/api/recurring-tasks', recurringTasksRoutes);
   console.log('Recurring tasks routes loaded');
+  app.use('/api/notifications', notificationsRoutes);
+  console.log('Notifications routes loaded');
 } catch (err: any) {
   console.error('Error loading routes:', err?.message || err);
   process.exit(1);
@@ -101,6 +105,9 @@ async function start() {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
     });
+
+    // Start the daily reminder / recurring-task scheduler.
+    await startScheduler(prisma);
   } catch (err: any) {
     console.error('Failed to start server:', err?.message || err);
     await prisma.$disconnect();
